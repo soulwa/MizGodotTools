@@ -42,26 +42,15 @@ func _ready():
 		texture_path = texture_path[0]
 	item_texture.texture = load(texture_path)
 	
-	#update_size() # throws warning spam, no way to ignore :/
-	await get_tree().process_frame # sometimes size is overridden after _ready so have to call it after
-	update_size()
+	base_size = CUSTOM_BASE_SIZE if USE_CUSTOM_BASE_SIZE else item_texture.texture.get_size()
+	size = base_size
+	custom_minimum_size = base_size
 	
 	amount_in_stack_display.hide()
 	update_texture(item_texture.texture)
 	item_shadow.position = item_texture.position + shadow_offset
 	item_shadow_2.position = item_texture.position - shadow_offset / 2.0
 	item_dynamic_data.update_stack_texture()
-
-func update_size():
-	size = item_texture.texture.get_size()
-	base_size = size
-	if USE_CUSTOM_BASE_SIZE:
-		size = CUSTOM_BASE_SIZE
-		base_size = CUSTOM_BASE_SIZE # size will get ignored in slot containers so need to set here
-	custom_minimum_size = size
-	item_texture.size = size
-	item_shadow.size = size
-	item_shadow_2.size = size
 
 func update_texture(texture: Texture):
 	item_texture.texture = texture
